@@ -7,7 +7,7 @@ _Records Demo_ is a small CLI / HTTP based application that demonstrates:
 
 ### Setup
 
-Application requires Python >3.9 and [pipenv](https://pipenv.pypa.io/en/latest/)
+Application requires Python >=3.9 and [pipenv](https://pipenv.pypa.io/en/latest/)
 
 #### Install Dependencies
 ```
@@ -34,6 +34,6 @@ pipenv run python scripts/generate_sample_inputs.py
 ### Linting
 
 From the project root:
-`pipenv run cd .. && pylint records-demo`
+`flake8`
 
 ### Unit Testing

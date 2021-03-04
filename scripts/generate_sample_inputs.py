@@ -1,4 +1,4 @@
-"""Generates example test inputs in <project_root>/sample_inputs/"""
+"""Generates example test inputs in '<project_root>/sample_inputs/'."""
 import argparse
 import csv
 from pathlib import Path
@@ -14,12 +14,14 @@ MAX_SAMPLE_LENGTH = 1000
 
 
 def write_example_input(records: List[Record], fmt: RecordFileType):
+    """Given list of records and an output format, writes example file to the 'sample_inputs' directory."""
     with (OUTPUT_PATH / f"example.{fmt.value}").open('w', newline='') as out_stream:
         writer = csv.writer(out_stream, delimiter=RecordFileType.delimiters[fmt])
         writer.writerows(records)
 
 
 def main():
+    """Command line entrypoint for this utility script."""
     parser = argparse.ArgumentParser(description='Generate example test inputs in <project_root>/sample_inputs/')
     parser.add_argument('-n', type=int, default=100,
                         help=f'Number of records to generate in test files, {MIN_SAMPLE_LENGTH}-{MAX_SAMPLE_LENGTH}')

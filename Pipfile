@@ -5,8 +5,10 @@ name = "pypi"
 
 [packages]
 faker = "*"
-pylint = "*"
 fastapi = {extras = ["all"],version = "*"}
+flake8 = "*"
+install = "*"
+flake8-docstrings = "*"
 
 [dev-packages]
 

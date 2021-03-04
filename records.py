@@ -1,3 +1,5 @@
+"""Command line and REST interfaces for the application."""
+
 import argparse
 import csv
 import logging
@@ -17,6 +19,7 @@ async def home():
 
 
 def cli_entry():
+    """Command line entrypoint for the application."""
     logging.basicConfig(format='[%(levelname)s] %(asctime)s %(filename)s:%(lineno)d %(message)s')
     parser = argparse.ArgumentParser(description='Accepts an arbitrary number of record files and sorts them')
     parser.add_argument('files', metavar='FILE', nargs='+',

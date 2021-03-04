@@ -1,4 +1,4 @@
-"""Record domain functionality"""
+"""Record domain functionality."""
 import csv
 import logging
 from typing import List
@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def read_records(files: List[str]) -> List[Record]:
+    """Given a list of files, combines them and maps them to Record entries."""
     records = []
     for file in files:
         try:
@@ -25,4 +26,5 @@ def read_records(files: List[str]) -> List[Record]:
 
 
 def sort_records(records: List[Record], sort_col: int):
+    """Sorts a list of records in-place."""
     sorted(records, key=lambda record: record[sort_col])
