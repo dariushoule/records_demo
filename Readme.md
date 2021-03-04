@@ -21,6 +21,21 @@ pipenv install
 pipenv run python records.py
 ```
 
+#### Command line examples
+```
+# Read sample inputs and sort by email descending, then last name ascending
+pipenv run python records.py sample_inputs/example.csv -s 2,DESC -s 0,ASC
+
+# Read sample inputs and sort by birth date ascending
+pipenv run python records.py sample_inputs/example.csv -s 4,ASC
+
+# Read sample inputs and sort by last name descending
+pipenv run python records.py sample_inputs/example.csv -s 0,DESC
+
+# Combining multiple files into a single set of pipe separated values
+pipenv run python records.py sample_inputs/example.csv sample_inputs/example.psv sample_inputs/example.ssv -f psv
+```
+
 #### As a REST API
 ```
 pipenv run python records.py

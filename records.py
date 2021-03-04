@@ -1,5 +1,4 @@
 """Command line and REST interfaces for the application."""
-
 import argparse
 import csv
 import logging
@@ -24,16 +23,19 @@ def cli_entry():
     parser = argparse.ArgumentParser(description='Accepts an arbitrary number of record files and sorts them')
     parser.add_argument('files', metavar='FILE', nargs='+',
                         help='Record files to be parsed, supports *.csv, *.psv, and *.ssv')
-    parser.add_argument('-s', '--sort', metavar='SORT', type=int, default=0,
-                        help='Zero based sort column index, defaulting to the first column')
+    parser.add_argument('-s', '--sort', nargs='*', metavar='SORT', type=str,
+                        help='Zero-based sort column index and direction. '
+                             'Specify column number and direction separated by a comma. '
+                             '"ASC" represents ascending, "DESC" represents descending. '
+                             'Sort priority reflects the order sorts are provided.')
     parser.add_argument('-f', '--format', metavar='FORMAT', default="csv",
                         choices=['csv', 'psv', 'ssv'],
                         help='Format to output records in, accepts csv, psv, and ssv')
     args = parser.parse_args()
     records = read_records(args.files)
-    sort_records(records, args.sort)
     writer = csv.writer(sys.stdout, delimiter=RecordFileType.delimiters[RecordFileType(args.format)])
-    writer.writerows(records)
+    sorted_records = sort_records(records, args.sort)
+    writer.writerows(sorted_records)
 
 
 if __name__ == '__main__':

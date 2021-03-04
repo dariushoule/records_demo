@@ -37,7 +37,7 @@ def main():
         fake.first_name(),
         fake.email(),
         fake.color_name(),
-        fake.date_of_birth()) for _ in range(args.n)]
+        fake.date_of_birth().strftime("%m/%d/%Y")) for _ in range(args.n)]
 
     for file_type in RecordFileType:
         write_example_input(records, file_type)
