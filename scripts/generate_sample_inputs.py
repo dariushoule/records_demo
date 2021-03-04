@@ -9,6 +9,8 @@ from faker import Faker
 from models.record import Record, RecordFileType
 
 OUTPUT_PATH = Path(__file__).parent.parent / 'sample_inputs'
+MIN_SAMPLE_LENGTH = 1
+MAX_SAMPLE_LENGTH = 1000
 
 
 def write_example_input(records: List[Record], fmt: RecordFileType):
@@ -18,15 +20,20 @@ def write_example_input(records: List[Record], fmt: RecordFileType):
         RecordFileType.SPACE_SEPARATED: ' '
     }
 
-    with (OUTPUT_PATH / f"example.{fmt.value}").open('w', newline='',) as out_stream:
+    with (OUTPUT_PATH / f"example.{fmt.value}").open('w', newline='', ) as out_stream:
         writer = csv.writer(out_stream, delimiter=delimiters[fmt])
         writer.writerows(records)
 
 
 def main():
     parser = argparse.ArgumentParser(description='Generate example test inputs in <project_root>/sample_inputs/')
-    parser.add_argument('-n', type=int, default=100, help='Number of records to generate in test files')
+    parser.add_argument('-n', type=int, default=100,
+                        help=f'Number of records to generate in test files, {MIN_SAMPLE_LENGTH}-{MAX_SAMPLE_LENGTH}')
     args = parser.parse_args()
+
+    if args.n < MIN_SAMPLE_LENGTH or args.n > MAX_SAMPLE_LENGTH:
+        parser.print_help()
+        return
 
     fake = Faker()
     records = [Record(
