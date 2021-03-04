@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 faker = "*"
 pylint = "*"
+fastapi = {extras = ["all"],version = "*"}
 
 [dev-packages]
 

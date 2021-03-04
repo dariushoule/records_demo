@@ -11,7 +11,7 @@ from models.record import Record, RecordFileType
 OUTPUT_PATH = Path(__file__).parent.parent / 'sample_inputs'
 
 
-def write_example(records: List[Record], fmt: RecordFileType):
+def write_example_input(records: List[Record], fmt: RecordFileType):
     delimiters = {
         RecordFileType.COMMA_SEPARATED: ',',
         RecordFileType.PIPE_SEPARATED: '|',
@@ -37,7 +37,7 @@ def main():
         fake.date_of_birth()) for _ in range(args.n)]
 
     for file_type in RecordFileType:
-        write_example(records, file_type)
+        write_example_input(records, file_type)
 
 
 if __name__ == '__main__':
