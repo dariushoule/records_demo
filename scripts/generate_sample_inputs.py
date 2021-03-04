@@ -14,14 +14,8 @@ MAX_SAMPLE_LENGTH = 1000
 
 
 def write_example_input(records: List[Record], fmt: RecordFileType):
-    delimiters = {
-        RecordFileType.COMMA_SEPARATED: ',',
-        RecordFileType.PIPE_SEPARATED: '|',
-        RecordFileType.SPACE_SEPARATED: ' '
-    }
-
-    with (OUTPUT_PATH / f"example.{fmt.value}").open('w', newline='', ) as out_stream:
-        writer = csv.writer(out_stream, delimiter=delimiters[fmt])
+    with (OUTPUT_PATH / f"example.{fmt.value}").open('w', newline='') as out_stream:
+        writer = csv.writer(out_stream, delimiter=RecordFileType.delimiters[fmt])
         writer.writerows(records)
 
 

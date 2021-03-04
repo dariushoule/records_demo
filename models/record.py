@@ -11,6 +11,13 @@ class RecordFileType(Enum):
     SPACE_SEPARATED = "ssv"
 
 
+RecordFileType.delimiters = {
+    RecordFileType.COMMA_SEPARATED: ',',
+    RecordFileType.PIPE_SEPARATED: '|',
+    RecordFileType.SPACE_SEPARATED: ' '
+}
+
+
 @dataclass
 class Record:
     """Record data model"""
@@ -22,3 +29,6 @@ class Record:
 
     def __iter__(self):
         return iter(self.__dict__.values())
+
+    def __len__(self):
+        return len(self.__dict__.values())
