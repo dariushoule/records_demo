@@ -6,11 +6,11 @@ import sys
 from typing import Optional, List
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.openapi.utils import get_openapi
 from pydantic.main import BaseModel
 
 from domain.record import read_records, sort_records
 from models.record import RecordFileType, Record
-
 
 # API ------------------------------------------------------------------------------------------------------------------
 
@@ -28,8 +28,15 @@ class CreateRecordRequestModel(BaseModel):
     fmt: Optional[str] = "csv"
 
 
-@app.post('/records', status_code=201)
-async def add_record(request: CreateRecordRequestModel):
+@app.post('/records',
+          status_code=201,
+          response_model=List[str],
+          operation_id="create_record",
+          summary="Create a record",
+          description="Create a record and save in-memory for the lifetime of this API instance. "
+                      "Provide last name, first name, email, color, and date of birth respectively. "
+                      "Separate values using the separator specified in fmt. csv:, psv:|, ssv: .")
+async def add_record(request: CreateRecordRequestModel) -> List[str]:
     """Handle adding a Record to Record storage."""
     if request.fmt not in ['csv', 'psv', 'ssv']:
         raise HTTPException(status_code=422, detail="unsupported record format")
@@ -42,8 +49,15 @@ async def add_record(request: CreateRecordRequestModel):
     return web_records[-1].as_list()
 
 
-@app.get('/records')
-async def get_records(sort: List[str] = Query(None)):
+@app.get('/records',
+         response_model=List[List[str]],
+         operation_id="get_records",
+         summary="Retrieve all records with optional sort",
+         description="Retrieve all records with optional sort. "
+                     "Multiple sorts are supported with the first being highest priority. "
+                     "Sorts are specified with the format [column number],[direction]. "
+                     "Example: 0,DESC to sort last name.")
+async def get_records(sort: List[str] = Query(None)) -> List[List[str]]:
     """Retrieve all records with given sorting rules."""
     try:
         sorted_records = sort_records(web_records, sort)
@@ -52,24 +66,53 @@ async def get_records(sort: List[str] = Query(None)):
     return [r.as_list() for r in sorted_records]
 
 
-@app.get('/records/email')
-async def get_records_email_sort():
+@app.get('/records/email',
+         response_model=List[List[str]],
+         operation_id="get_records_email_sort",
+         summary="Retrieve all records with email sort ascending",
+         description="Retrieve all records with email sort ascending.")
+async def get_records_email_sort() -> List[List[str]]:
     """Retrieve all records with pre-selected email sort."""
     return await get_records(['2,ASC'])
 
 
-@app.get('/records/birthdate')
-async def get_records_birthdate_sort():
+@app.get('/records/birthdate',
+         response_model=List[List[str]],
+         operation_id="get_records_birthdate_sort",
+         summary="Retrieve all records with birthdate sort ascending",
+         description="Retrieve all records with birthdate sort ascending.")
+async def get_records_birthdate_sort() -> List[List[str]]:
     """Retrieve all records with pre-selected birthdate sort."""
     return await get_records(['4,ASC'])
 
 
-@app.get('/records/name')
-async def get_records_name_sort():
+@app.get('/records/name',
+         response_model=List[List[str]],
+         operation_id="get_records_name_sort",
+         summary="Retrieve all records with name sort ascending",
+         description="Retrieve all records with name sort ascending. Name is computed as '[First] [Last]'")
+async def get_records_name_sort() -> List[List[str]]:
     """Retrieve all records with pre-selected first + last name sort."""
     # Sort by the combination of first + last name
     sorted_records = sorted(web_records, key=lambda record: f'{record[1]} {record[0]}')
     return [r.as_list() for r in sorted_records]
+
+
+def customize_openapi():
+    """Customize the openapi dashboard and add a title / version."""
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Records Demo Application",
+        version="1.0",
+        description="Record Demo Application REST API Documentation",
+        routes=app.routes,
+    )
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = customize_openapi
 
 
 # CLI ------------------------------------------------------------------------------------------------------------------
