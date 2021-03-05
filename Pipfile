@@ -7,7 +7,6 @@ name = "pypi"
 faker = "*"
 fastapi = {extras = ["all"],version = "*"}
 flake8 = "*"
-install = "*"
 flake8-docstrings = "*"
 uvicorn = {extras = ["standard"],version = "*"}
 pytest = "*"
