@@ -75,10 +75,10 @@ async def get_records_name_sort():
 # CLI ------------------------------------------------------------------------------------------------------------------
 
 
-def process_records(files: List[str], sort: List[str], fmt: str):
+def process_records(files: List[str], sort: List[str], fmt: str, output_stream=sys.stdout):
     """Accept a list of record files and outputs them in the given format, optionally sorting."""
     records = read_records(files)
-    writer = csv.writer(sys.stdout, delimiter=RecordFileType.delimiters[RecordFileType(fmt)])
+    writer = csv.writer(output_stream, delimiter=RecordFileType.delimiters[RecordFileType(fmt)])
     sorted_records = sort_records(records, sort)
     writer.writerows(sorted_records)
 

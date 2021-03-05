@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from models.record import Record, RecordFileType
 
-from dateutil.parser import parse
+from dateutil.parser import parse, ParserError
 
 logger = logging.getLogger(__name__)
 
@@ -21,8 +21,12 @@ def read_records(files: List[str]) -> List[Record]:
             logger.warning(f'{file} is an unsupported file format, it will be skipped')
             continue
 
-        with open(file, 'r', newline='') as in_stream:
-            records += [Record(*row) for row in csv.reader(in_stream, delimiter=RecordFileType.delimiters[fmt])]
+        try:
+            with open(file, 'r', newline='') as in_stream:
+                records += [Record(*row) for row in csv.reader(in_stream, delimiter=RecordFileType.delimiters[fmt])]
+        except (TypeError, UnicodeDecodeError, ParserError):
+            logger.warning(f'{file} could not be parsed, it will be skipped')
+            continue
 
     return records
 

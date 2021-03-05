@@ -11,6 +11,7 @@ install = "*"
 flake8-docstrings = "*"
 uvicorn = {extras = ["standard"],version = "*"}
 pytest = "*"
+python-dateutil = "*"
 
 [dev-packages]
 
