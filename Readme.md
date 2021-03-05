@@ -42,6 +42,7 @@ pipenv run uvicorn records:app
 ```
 
 See the interactive openAPI dashboard at [http://localhost:8000/docs](http://localhost:8000/docs)
+for usage and testing assistance.
 
 #### Generating sample inputs to test with
 ```

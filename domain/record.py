@@ -5,6 +5,8 @@ from typing import List, Optional
 
 from models.record import Record, RecordFileType
 
+from dateutil.parser import parse
+
 logger = logging.getLogger(__name__)
 
 
@@ -23,6 +25,15 @@ def read_records(files: List[str]) -> List[Record]:
             records += [Record(*row) for row in csv.reader(in_stream, delimiter=RecordFileType.delimiters[fmt])]
 
     return records
+
+
+def column_value_for_sort(record: Record, column_number: int):
+    """Return the best representation of a Record's column for sorting."""
+    if record[column_number] == record.date_of_birth:
+        # birth dates should be sorted temporally vs alphabetically
+        return parse(record[column_number])
+    else:
+        return record[column_number]
 
 
 def sort_records(records: List[Record], sorts: List[str]) -> Optional[List[Record]]:
@@ -50,6 +61,6 @@ def sort_records(records: List[Record], sorts: List[str]) -> Optional[List[Recor
             if col_number < 0 or col_number >= len(records[0]):
                 raise ValueError(f'Fatal error, {col_number} is not an in-range column number.')
 
-            sorted_records = sorted(sorted_records, key=lambda record: record[col_number],
+            sorted_records = sorted(sorted_records, key=lambda record: column_value_for_sort(record, col_number),
                                     reverse=True if direction == "desc" else False)
     return sorted_records

@@ -2,6 +2,8 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from typing import List
+
 from dateutil.parser import parse
 
 
@@ -40,7 +42,11 @@ class Record:
     def date_of_birth(self, date_str: str):
         self._date_of_birth = parse(date_str)
 
-    def as_list(self):
+    def date_of_birth_as_datetime(self) -> datetime:
+        """Return date of birth as a datetime. Useful for sorting"""
+        return self._date_of_birth
+
+    def as_list(self) -> List:
         """Return a representation of a record as a list."""
         return [self.last_name, self.first_name, self.email, self.favorite_color, self.date_of_birth]
 
