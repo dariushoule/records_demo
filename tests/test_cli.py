@@ -40,8 +40,9 @@ def test_process_records_sort_lastname():
 def test_process_records_sort_lastname_date():
     """Processes a file and sorts by a last name descending and date ascending. Outputs as comma separated values."""
     str_io = io.StringIO()
+    expected_filename = str(Path(__file__).parent / 'expected' / 'test_process_records_sort_lastname_date')
     records.process_records([str(Path(__file__).parent / 'data' / 'test.ssv')], ['0,DESC', '4,ASC'], 'csv', str_io)
-    with open(str(Path(__file__).parent / 'expected' / 'test_process_records_sort_lastname_date'), 'rb') as expected_stream:
+    with open(expected_filename, 'rb') as expected_stream:
         assert str_io.getvalue().encode("ascii") == expected_stream.read()
 
 
