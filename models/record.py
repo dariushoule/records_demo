@@ -43,7 +43,7 @@ class Record:
         self._date_of_birth = parse(date_str)
 
     def date_of_birth_as_datetime(self) -> datetime:
-        """Return date of birth as a datetime. Useful for sorting"""
+        """Return date of birth as a datetime. Useful for sorting."""
         return self._date_of_birth
 
     def as_list(self) -> List:

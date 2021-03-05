@@ -1,3 +1,4 @@
+"""CLI Tests."""
 import io
 import tempfile
 from os import unlink
