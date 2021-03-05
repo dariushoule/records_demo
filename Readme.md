@@ -24,7 +24,7 @@ pipenv run python records.py
 #### Command line examples
 ```
 # Read sample inputs and sort by email descending, then last name ascending
-pipenv run python records.py sample_inputs/example.csv -s 2,DESC -s 0,ASC
+pipenv run python records.py sample_inputs/example.csv -s 2,DESC 0,ASC
 
 # Read sample inputs and sort by birth date ascending
 pipenv run python records.py sample_inputs/example.csv -s 4,ASC
