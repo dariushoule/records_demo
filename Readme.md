@@ -38,8 +38,10 @@ pipenv run python records.py sample_inputs/example.csv sample_inputs/example.psv
 
 #### As a REST API
 ```
-pipenv run python records.py
+pipenv run uvicorn records:app
 ```
+
+See the interactive openAPI dashboard at [http://localhost:8000/docs](http://localhost:8000/docs)
 
 #### Generating sample inputs to test with
 ```
@@ -49,6 +51,11 @@ pipenv run python scripts/generate_sample_inputs.py
 ### Linting
 
 From the project root:
-`flake8`
+```
+flake8
+```
 
 ### Unit Testing
+```
+pytest records_demo
+```

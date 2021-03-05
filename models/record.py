@@ -33,6 +33,7 @@ class Record:
 
     @property
     def date_of_birth(self) -> str:
+        """Return date in M/D/YYYY format."""
         return self._date_of_birth.strftime("%m/%d/%Y")
 
     @date_of_birth.setter
@@ -40,6 +41,7 @@ class Record:
         self._date_of_birth = parse(date_str)
 
     def as_list(self):
+        """Return a representation of a record as a list."""
         return [self.last_name, self.first_name, self.email, self.favorite_color, self.date_of_birth]
 
     def __iter__(self):

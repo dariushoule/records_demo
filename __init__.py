@@ -1,1 +1,0 @@
-"""Records Demo Application Module."""

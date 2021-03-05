@@ -3,18 +3,70 @@ import argparse
 import csv
 import logging
 import sys
+from typing import Optional, List
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Query
+from pydantic.main import BaseModel
 
 from domain.record import read_records, sort_records
-from models.record import RecordFileType
+from models.record import RecordFileType, Record
 
 app = FastAPI()
 
+# Holds records for the duration this API instance's lifetime
+web_records = []
 
-@app.get("/")
-async def home():
-    return {"message": "Hey rest client, you are looking dandy today"}
+
+class CreateRecordRequestModel(BaseModel):
+    record: str
+    fmt: Optional[str] = "csv"
+
+
+@app.post('/records', status_code=201)
+async def add_record(request: CreateRecordRequestModel):
+    if request.fmt not in ['csv', 'psv', 'ssv']:
+        raise HTTPException(status_code=400, detail="unsupported record format")
+
+    try:
+        delimiter = RecordFileType.delimiters[RecordFileType(request.fmt)]
+        web_records.append([Record(*row) for row in csv.reader([request.record], delimiter=delimiter)][0])
+    except TypeError:
+        raise HTTPException(status_code=422, detail="record syntax invalid, failed to parse")
+    return web_records[-1].as_list()
+
+
+@app.get('/records')
+async def get_records(sort: List[str] = Query(None)):
+    try:
+        sorted_records = sort_records(web_records, sort)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="sort parameters are invalid")
+    return [r.as_list() for r in sorted_records]
+
+
+@app.get('/records/email')
+async def get_records_email_sort():
+    return await get_records(['2,ASC'])
+
+
+@app.get('/records/birthdate')
+async def get_records_birthdate_sort():
+    return await get_records(['4,ASC'])
+
+
+@app.get('/records/name')
+async def get_records_name_sort():
+    # Sort by the combination of first + last name
+    sorted_records = sorted(web_records, key=lambda record: f'{record[0]} {record[1]}')
+    return [r.as_list() for r in sorted_records]
+
+
+def process_records(files: List[str], sort: List[str], fmt: str):
+    """Accepts a list of record files and outputs them in the given format, optionally sorting."""
+    records = read_records(files)
+    writer = csv.writer(sys.stdout, delimiter=RecordFileType.delimiters[RecordFileType(fmt)])
+    sorted_records = sort_records(records, sort)
+    writer.writerows(sorted_records)
 
 
 def cli_entry():
@@ -32,10 +84,7 @@ def cli_entry():
                         choices=['csv', 'psv', 'ssv'],
                         help='Format to output records in, accepts csv, psv, and ssv')
     args = parser.parse_args()
-    records = read_records(args.files)
-    writer = csv.writer(sys.stdout, delimiter=RecordFileType.delimiters[RecordFileType(args.format)])
-    sorted_records = sort_records(records, args.sort)
-    writer.writerows(sorted_records)
+    process_records(args.files, args.sort, args.format)
 
 
 if __name__ == '__main__':
