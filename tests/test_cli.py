@@ -13,7 +13,7 @@ def test_process_records_file():
     """Processes a single file sorting by lastname ascending. Outputs as comma separated values."""
     str_io = io.StringIO()
     records.process_records([str(Path(__file__).parent / 'data' / 'test.csv')], ['0,ASC'], 'csv', str_io)
-    with open('expected/test_process_records_file', 'rb') as expected_stream:
+    with open(str(Path(__file__).parent / 'expected' / 'test_process_records_file'), 'rb') as expected_stream:
         assert str_io.getvalue().encode("ascii") == expected_stream.read()
 
 
@@ -25,7 +25,7 @@ def test_process_records_files():
     ]
     str_io = io.StringIO()
     records.process_records(files, ['0,ASC'], 'csv', str_io)
-    with open('expected/test_process_records_files', 'rb') as expected_stream:
+    with open(str(Path(__file__).parent / 'expected' / 'test_process_records_files'), 'rb') as expected_stream:
         assert str_io.getvalue().encode("ascii") == expected_stream.read()
 
 
@@ -33,7 +33,7 @@ def test_process_records_sort_lastname():
     """Processes a file and sorts by a last name descending. Outputs as pipe separated values."""
     str_io = io.StringIO()
     records.process_records([str(Path(__file__).parent / 'data' / 'test.ssv')], ['0,DESC'], 'psv', str_io)
-    with open('expected/test_process_records_sort_lastname', 'rb') as expected_stream:
+    with open(str(Path(__file__).parent / 'expected' / 'test_process_records_sort_lastname'), 'rb') as expected_stream:
         assert str_io.getvalue().encode("ascii") == expected_stream.read()
 
 
@@ -41,7 +41,7 @@ def test_process_records_sort_lastname_date():
     """Processes a file and sorts by a last name descending and date ascending. Outputs as comma separated values."""
     str_io = io.StringIO()
     records.process_records([str(Path(__file__).parent / 'data' / 'test.ssv')], ['0,DESC', '4,ASC'], 'csv', str_io)
-    with open('expected/test_process_records_sort_lastname_date', 'rb') as expected_stream:
+    with open(str(Path(__file__).parent / 'expected' / 'test_process_records_sort_lastname_date'), 'rb') as expected_stream:
         assert str_io.getvalue().encode("ascii") == expected_stream.read()
 
 
